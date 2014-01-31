@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AV Phone</string>
+    <string name="action_settings">Settings</string>
+    <string name="started_since">Service started since</string>
+    <string name="phone_id">Phone ID</string>
+    <string name="rssi">RSSI</string>
+    <string name="rsrp">RSRP</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="operator">Operator</string>
+    <string name="network_type">Network type</string>
+    <string name="battery_level">Battery level</string>
+    <string name="bytes_sent">Bytes sent</string>
+    <string name="bytes_received">Bytes received</string>
+    <string name="active_wifi">Wi-Fi</string>
+    <string name="running_apps">Running applications</string>
+    <string name="memory_usage">Memory usage</string>
+    <string name="no_value">-</string>
+
+    <!-- Notifications -->
+    <string name="notif_title">Phone monitoring</string>
+    <string name="notif_desc">Pushing data to AirVantage</string>
+    <string name="notif_new_message">Message!</string>
+
+    <!-- Preferences -->
+    <string name="pref_password_key">pref_password</string>
+    <string name="pref_password">Password</string>
+    
+    <string name="pref_server_key">pref_server_key</string>
+    <string name="pref_server">AirVantage server</string>
+    
+    <string name="pref_period_key">pref_period_key</string>
+    <string name="pref_period">Push data period</string>
+
+    <!-- default values -->
+    <string name="pref_password_default">12345</string>
+    <string name="pref_server_default">qa-trunk.airvantage.net</string>
+    <string name="pref_period_default">2</string>
+    
+    <string name="invalid_prefs">Invalid parameters</string>
+    <string name="prefs_missing">Some application parameters are missing</string>
+
+</resources>

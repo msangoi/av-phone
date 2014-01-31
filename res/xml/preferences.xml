@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <EditTextPreference
+        android:defaultValue="@string/pref_server_default"
+        android:key="@string/pref_server_key"
+        android:summary=""
+        android:title="@string/pref_server" />
+    
+    <EditTextPreference
+        android:defaultValue="@string/pref_password_default"
+        android:key="@string/pref_password_key"
+        android:summary=""
+        android:title="@string/pref_password" 
+        android:inputType="textPassword"/>
+
+    <ListPreference
+        android:defaultValue="@string/pref_period_default"
+        android:entries="@array/periodentries"
+        android:entryValues="@array/periodvalues"
+        android:key="@string/pref_period_key"
+        android:summary=""
+        android:title="@string/pref_period" />
+        
+
+</PreferenceScreen>
