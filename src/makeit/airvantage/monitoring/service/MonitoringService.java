@@ -147,7 +147,7 @@ public class MonitoringService extends Service {
                 data.setNetworkType("HSDPA");
                 break;
             case TelephonyManager.NETWORK_TYPE_HSPAP:
-                data.setNetworkType("HSPAP");
+                data.setNetworkType("HSPA+");
                 break;
             case TelephonyManager.NETWORK_TYPE_HSPA:
                 data.setNetworkType("HSPA");
