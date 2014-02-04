@@ -36,7 +36,7 @@
 
     <!-- default values -->
     <string name="pref_password_default">12345</string>
-    <string name="pref_server_default">qa-trunk.airvantage.net</string>
+    <string name="pref_server_default">na.airvantage.net</string>
     <string name="pref_period_default">2</string>
     
     <string name="invalid_prefs">Invalid parameters</string>
