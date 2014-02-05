@@ -18,6 +18,7 @@
     <string name="running_apps">Running applications</string>
     <string name="memory_usage">Memory usage</string>
     <string name="no_value">-</string>
+    <string name="register">Register</string>
 
     <!-- Notifications -->
     <string name="notif_title">Phone monitoring</string>
@@ -33,11 +34,18 @@
     
     <string name="pref_period_key">pref_period_key</string>
     <string name="pref_period">Push data period</string>
+    
+    <string name="pref_client_id_key">pref_client_id_key</string>
+    <string name="pref_client_id">Client ID</string>
+    
+    <string name="pref_show_register_key">pref_show_register_key</string>
+    <string name="pref_show_register">Show register button</string>
 
     <!-- default values -->
     <string name="pref_password_default">12345</string>
     <string name="pref_server_default">na.airvantage.net</string>
     <string name="pref_period_default">2</string>
+    <string name="pref_client_id_default">54d4faa5343d49fba03f2a2ec1f210b9</string>
     
     <string name="invalid_prefs">Invalid parameters</string>
     <string name="prefs_missing">Some application parameters are missing</string>
