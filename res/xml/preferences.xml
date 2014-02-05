@@ -8,6 +8,17 @@
         android:title="@string/pref_server" />
     
     <EditTextPreference
+        android:defaultValue="@string/pref_client_id_default"
+        android:key="@string/pref_client_id_key"
+        android:summary=""
+        android:title="@string/pref_client_id" />
+    
+    <CheckBoxPreference
+         android:key="@string/pref_show_register_key"
+         android:title="@string/pref_show_register"
+         android:defaultValue="true" />
+    
+    <EditTextPreference
         android:defaultValue="@string/pref_password_default"
         android:key="@string/pref_password_key"
         android:summary=""

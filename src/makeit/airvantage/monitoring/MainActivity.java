@@ -1,9 +1,13 @@
 package makeit.airvantage.monitoring;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
 import makeit.airvantage.monitoring.service.LogMessage;
 import makeit.airvantage.monitoring.service.MonitoringService;
 import makeit.airvantage.monitoring.service.MonitoringService.ServiceBinder;
 import makeit.airvantage.monitoring.service.NewData;
+import net.airvantage.utils.AirVantageClient;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -18,17 +22,22 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnSharedPreferenceChangeListener {
 
@@ -39,6 +48,8 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     private ServiceListener serviceListener = new ServiceListener(this);
 
     private SharedPreferences prefs;
+    
+	private Button registerBt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +72,15 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         phoneUniqueId = Build.SERIAL;
         ((TextView) findViewById(R.id.phoneid_value)).setText(phoneUniqueId);
 
+        registerBt = (Button) findViewById(R.id.register_bt);
+        registerBt.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				register();
+			}
+		});
+        updateRegisterVisbility(prefs);
+
         boolean isServiceRunning = isServiceRunning();
 
         Switch serviceSwitch = (Switch) findViewById(R.id.service_switch);
@@ -82,6 +102,83 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             }
         });
     }
+    
+    protected void register() {
+    	// Is there a token available in the local storage?
+    	// Yes
+    	//-- Is the token still valid?
+    	//-- Yes
+    	//---- Register the system
+    	//-- No
+    	//---- Refresh token
+    	//---- Register the system
+    	// No
+    	//-- Get a new token
+		// Open authorization activity
+		Intent intent = new Intent(this, AuthorizationActivity.class);
+		startActivityForResult(intent, AuthorizationActivity.REQUEST_AUTHORIZATION);
+    	//-- Register the system
+    }
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+		case (AuthorizationActivity.REQUEST_AUTHORIZATION): {
+			if (resultCode == Activity.RESULT_OK) {
+				String token = data.getStringExtra(AuthorizationActivity.TOKEN);
+		        final String serverHost = prefs.getString(this.getString(R.string.pref_server_key), null);
+
+				AsyncTask<String, Void, Boolean> registerTask = new AsyncTask<String, Void, Boolean>() {
+					protected Boolean doInBackground(String... params) {
+						try {
+							AirVantageClient client = new AirVantageClient(
+									serverHost,
+									params[0]);
+							net.airvantage.model.System system = new net.airvantage.model.System();
+							net.airvantage.model.System.Gateway gateway = new net.airvantage.model.System.Gateway();
+							gateway.serialNumber = phoneUniqueId;
+							system.gateway = gateway;
+							system.state = "READY";
+							client.create(system);
+							return true;
+						} catch (IOException e) {
+							Log.e(MainActivity.class.getName(),
+									"Error when trying to get current user", e);
+							return false;
+						}
+					}
+				};
+
+				registerTask.execute(token);
+				try {
+					if (registerTask.get()) {
+						prefs.edit().putBoolean(this.getString(R.string.pref_show_register_key), false).commit();
+						Toast.makeText(getBaseContext(),
+								"System registered on AirVantage.", Toast.LENGTH_SHORT)
+								.show();
+					}
+					else {
+						Toast.makeText(getBaseContext(),
+								"An error occured when registering system.", Toast.LENGTH_SHORT)
+								.show();
+					}
+				} catch (InterruptedException e) {
+					Log.e(MainActivity.class.getName(), "Error", e);
+					Toast.makeText(getBaseContext(),
+							"An error occured when registering system.", Toast.LENGTH_SHORT)
+							.show();
+				} catch (ExecutionException e) {
+					Log.e(MainActivity.class.getName(), "Error", e);
+					Toast.makeText(getBaseContext(),
+							"An error occured when registering system.", Toast.LENGTH_SHORT)
+							.show();
+				}
+			}
+			break;
+		}
+		}
+	}
 
     @Override
     protected void onDestroy() {
@@ -173,6 +270,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
     };
 
+
     // Preferences
 
     @Override
@@ -201,5 +299,18 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             stopMonitoringService();
             startMonitoringService();
         }
+
+        updateRegisterVisbility(prefs);
     }
+
+	private void updateRegisterVisbility(SharedPreferences prefs) {
+		boolean showRegister = prefs.getBoolean(this.getString(R.string.pref_show_register_key), true);
+        if (showRegister) {
+        	registerBt.setVisibility(View.VISIBLE);
+        }
+        else {
+        	registerBt.setVisibility(View.GONE);
+        }
+	}
+    
 }
